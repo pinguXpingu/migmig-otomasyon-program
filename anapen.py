@@ -37,7 +37,7 @@ class anapen(QMainWindow):
         buton_kayit.clicked.connect(self.kayit)
         buton_kayit.setStyleSheet(buton_stili)
         
-        buton_rapor=QPushButton("Faaliyet Raporu")
+        buton_rapor=QPushButton("Yeni Faaliyet")
         buton_rapor.clicked.connect(self.faaliyet)
         buton_rapor.setStyleSheet(buton_stili)
         

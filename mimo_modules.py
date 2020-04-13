@@ -6,7 +6,8 @@ Created on 30 Mar 2020
 
 import sqlite3,os
 from PyQt5.Qt import QPrinter,QPrintDialog, QDialog, QByteArray, QBuffer,\
-QTextDocument, QPushButton, QRadioButton, QGridLayout, QIntValidator
+QTextDocument, QPushButton, QRadioButton, QGridLayout, QIntValidator,\
+    QMessageBox
 from PyQt5.QtCore import Qt
 from time import time
 
@@ -22,9 +23,11 @@ def olustur():
     isletme_belgeno varchar(25),\
     eklenme_tarihi integer, \
     ziyaret_tarihi integer, \
+    son_ziyaretci varchar(8), \
     rapor varchar(10), \
     fatura varchar(12), \
     tahsilat varchar(10)\
+    notlar varchar(50)\
 )")
     imlec.execute("create table danisman(\
     d_no integer primary key, \
@@ -71,8 +74,8 @@ def ekle(tablo,*args):
     if args:
         if tablo=="firmalar":
             imlec.execute(f"insert into firmalar(\
-            isletme_adi,isletme_adresi,isletme_vergino,isletme_unetno,isletme_belgeno,rapor,fatura,tahsilat,eklenme_tarihi,ziyaret_tarihi)\
-            values('{args[0]}','{args[1]}','{args[2]}','{args[3]}','{args[4]}','{args[5]}','{args[6]}','{args[7]}',{zaman},null\
+            isletme_adi,isletme_adresi,isletme_vergino,isletme_unetno,isletme_belgeno,rapor,fatura,tahsilat,notlar,eklenme_tarihi,ziyaret_tarihi)\
+            values('{args[0]}','{args[1]}','{args[2]}','{args[3]}','{args[4]}','{args[5]}','{args[6]}','{args[7]}',null,{zaman},null\
             )")
         if tablo=="sirket":
             imlec.execute(f"insert into sirket(\
@@ -84,6 +87,9 @@ def ekle(tablo,*args):
             d_adi_soyadi,d_belgeno,d_kimlikno,d_telefon,d_eposta,eklenme_tarihi,son_faaliyet)\
             values('{args[0]}','{args[1]}','{args[2]}','{args[3]}','{args[4]}',{zaman},null)\
             ")
+        if tablo=="danisman_ek":
+            imlec.execute(f"update danisman\
+            set son_faaliyet={zaman} where d_adi_soyadi='{args[0]}'")
     baglan.commit()
     baglan.close()
 
@@ -102,6 +108,14 @@ def getir(*args):
 
 def guncelle(*args):
     pass
+
+
+
+def uyar(t):
+    msg=QMessageBox()
+    msg.setIcon(QMessageBox.Information)
+    msg.setText(t)
+    msg.exec_()
 
 
 
@@ -178,7 +192,6 @@ rakam=QIntValidator
 sag=Qt.AlignRight
 sol=Qt.AlignLeft
 orta=Qt.AlignCenter
-
 
 
 

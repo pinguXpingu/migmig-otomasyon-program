@@ -124,8 +124,10 @@ class yeniMusteri(QWidget):
             tahsilat=self.para.text()
         else:
             tahsilat=self.k8.currentText()
-        ekle("firmalar",ad,adres,vergi,unet,belge,rapor,fatura,tahsilat)
-        self.close()
+        
+        if "" not in [ad,adres,vergi,unet,belge,rapor,fatura,tahsilat]:
+            ekle("firmalar",ad,adres,vergi,unet,belge,rapor,fatura,tahsilat)
+            self.close()
 
     def iptal(self):
         self.close()
@@ -189,8 +191,9 @@ class yeniTMGD(QWidget):
         vergi=self.k3.text()
         belge=self.k4.text()
         
-        ekle("sirket",ad,unet,vergi,belge)
-        self.close()
+        if "" not in [ad,unet,vergi,belge]:
+            ekle("sirket",ad,unet,vergi,belge)
+            self.close()
 
     def iptal(self):
         self.close()
@@ -256,8 +259,9 @@ class yeniDanisman(QWidget):
         telefon=self.k4.text()
         posta=f"{self.k5.text()}@{self.k6.text()}"
         
-        ekle("danisman",ad,belge,kimlik,telefon,posta)
-        self.close()
+        if "" not in [ad,belge,kimlik,telefon,posta]:
+            ekle("danisman",ad,belge,kimlik,telefon,posta)
+            self.close()
 
     def iptal(self):
         self.close()
