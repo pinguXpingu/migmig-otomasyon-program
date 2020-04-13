@@ -205,9 +205,10 @@ class pen_faaliyet(QWidget):
 
     def katilim_ekle(self):
         k=self.katilan.currentText()
-        self.katilim_list.append(k)
-        self.katilanlar.append(k) 
-
+        if k not in self.katilim_list:
+            self.katilim_list.append(k)
+            self.katilanlar.append(k)
+    
     def tamam(self):
         firma=self.isletme.currentText()
         rapor=self.rapor.text()
