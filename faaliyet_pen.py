@@ -73,7 +73,7 @@ class pen_faaliyet(QWidget):
 ########kutular
         self.isletme=QComboBox()
         self.isletme.addItem("")
-        for i in getir():
+        for i in getir("firmalar"):
             self.isletme.addItem(i[1])
         self.isletme.currentIndexChanged.connect(self.doldur)
         
@@ -163,9 +163,9 @@ class pen_faaliyet(QWidget):
         self.setLayout(self.kutu)
 
     def doldur(self):
-        if self.isletme.currentText() != "Firma seç...":
+        if self.isletme.currentText() != "":
             try:
-                x=getir(self.isletme.currentText())
+                x=getir("firmalar",self.isletme.currentText())
                 self.adres.setText(x[2])
                 self.rapor.setText(x[5])
             except:
@@ -231,30 +231,6 @@ class pen_faaliyet(QWidget):
             for i in self.katilim_list:
                 ekle("danisman_ek",i)
             self.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

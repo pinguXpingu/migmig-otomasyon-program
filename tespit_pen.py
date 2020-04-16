@@ -6,7 +6,7 @@ Created on 30 Mar 2020
 from PyQt5.Qt import QWidget, QLabel, QGridLayout, QLineEdit, QPushButton,\
     QHBoxLayout, QTextEdit, QComboBox
 import time
-from mimo_modules import yazdırUlan, penceroye, orta
+from mimo_modules import yazdırUlan, penceroye, orta, getir
 
 
 class pen_tespit(QWidget):
@@ -20,43 +20,47 @@ class pen_tespit(QWidget):
         self.setWindowModality(2)
 
         izgara=QGridLayout()
-        e_1=QLabel("Firma:")
+        e_1=QLabel("Müşteri Firma:")
         e_2=QLabel("Danışman:")
-        e_3=QLabel("Değerlendirme:")
+        e_3=QLabel("TMGD Firma:")
+        e_4=QLabel("Değerlendirme:")
 
         self.b_1=QComboBox()
         self.b_1.addItem("")
-        self.b_1.addItem("Galatasaray AŞ")
-        self.b_1.addItem("AC Milan")
-        self.b_1.addItem("Liverpool FC")
-        self.b_1.addItem("Valencia CF")
+        for i in getir("firmalar"):
+            self.b_1.addItem(i[1])
         self.b_2=QComboBox()
         self.b_2.addItem("")
-        self.b_2.addItem("Mehmet Atasoy")
-        self.b_2.addItem("Manuel Rui Costa")
-        self.b_2.addItem("Cesare Maldini")
-        self.b_3=QTextEdit()
+        for i in getir("danışman"):
+            self.b_2.addItem(i[2])
+        self.b_3=QComboBox()
+        for i in getir("şirket"):
+            self.b_3.addItem(i[1])
+        self.b_4=QTextEdit()
 
         izgara.addWidget(e_1,1,1)
         izgara.addWidget(e_2,2,1)
         izgara.addWidget(e_3,3,1)
+        izgara.addWidget(e_4,4,1)
         izgara.addWidget(self.b_1,1,2)
         izgara.addWidget(self.b_2,2,2)
         izgara.addWidget(self.b_3,3,2)
+        izgara.addWidget(self.b_4,4,2)
 
 
         buton_1=QPushButton("Tamam")
         buton_1.clicked.connect(self.yazdirmaca)
-        izgara.addWidget(buton_1,4,2)
+        izgara.addWidget(buton_1,5,2)
 
         self.setLayout(izgara)
         
     def yazdirmaca(self):
         x=self.b_1.currentText()
         y=self.b_2.currentText()
-        z=self.b_3.toPlainText()
+        z=self.b_4.toPlainText()
+        w=self.b_3.currentText()
         
-        sayfa=form_tespit(x,y,z)
+        sayfa=form_tespit(x,y,z,w)
         sayfa.show()
 
 
@@ -67,7 +71,7 @@ class form_tespit(QWidget):
     '''
 
 
-    def __init__(self,x,y,z):
+    def __init__(self,x,y,z,w):
         super(form_tespit,self).__init__()
         self.setWindowTitle("Ziyaret ve Tespit Formu")
         self.setWindowModality(2)
@@ -76,6 +80,7 @@ class form_tespit(QWidget):
         self.x=x
         self.y=y
         self.z=z
+        self.w=w
 
         kutu=QGridLayout()
 
@@ -117,8 +122,14 @@ class form_tespit(QWidget):
         vergiNo.setMaximumHeight(64)
         belgeNo=QTextEdit()
         belgeNo.setMaximumHeight(64)
-        
-        
+        for i in getir("firmalar",x):
+            unetNo.setText(str(i[3]))
+            unetNo.setAlignment(orta)
+            vergiNo.setText(str(i[4]))
+            vergiNo.setAlignment(orta)
+            belgeNo.setText(str(i[5]))
+            belgeNo.setAlignment(orta)
+
         kutu.addWidget(isletme_E,4,1,1,5)
         kutu.addWidget(unvan_E,5,1)
         kutu.addWidget(unvan,6,1)
@@ -144,6 +155,8 @@ class form_tespit(QWidget):
         tmgd_belgeNo_E.setReadOnly(True)
 
         tmgd_unvan=QTextEdit()
+        tmgd_unvan.setText(w)
+        tmgd_unvan.setAlignment(orta)
         tmgd_unvan.setMaximumHeight(64)
         tmgd_unetNo=QTextEdit()
         tmgd_unetNo.setMaximumHeight(64)
@@ -151,6 +164,13 @@ class form_tespit(QWidget):
         tmgd_vergiNo.setMaximumHeight(64)
         tmgd_belgeNo=QTextEdit()
         tmgd_belgeNo.setMaximumHeight(64)
+        for i in getir("şirket",w):
+            tmgd_unetNo.setText(str(i[3]))
+            tmgd_unetNo.setAlignment(orta)
+            tmgd_vergiNo.setText(str(i[4]))
+            tmgd_vergiNo.setAlignment(orta)
+            tmgd_belgeNo.setText(str(i[2]))
+            tmgd_belgeNo.setAlignment(orta)
 
         kutu.addWidget(tmgd_E,8,1,1,5)
         kutu.addWidget(tmgd_unvan_E,9,1)
@@ -184,15 +204,21 @@ class form_tespit(QWidget):
         tmgdci_eposta_E=QLineEdit("E-POSTA")
         tmgdci_eposta_E.setReadOnly(True)
 
-        tmgdci_belgeNo=QLineEdit("ADR-7865")
+        tmgdci_belgeNo=QLineEdit()
         tmgdci_belgeNo.setMaximumWidth(96)
         tmgdci_adisoyadi=QLineEdit()
         tmgdci_adisoyadi.setText(self.y)
-        tmgdci_kimlikno=QLineEdit("49021076694")
+        tmgdci_kimlikno=QLineEdit()
         tmgdci_kimlikno.setMaximumWidth(128)
-        tmgdci_cepno=QLineEdit("0531 464 4150")
+        tmgdci_cepno=QLineEdit()
         tmgdci_cepno.setMaximumWidth(128)
-        tmgdci_eposta=QLineEdit("cevrem33@gmail.com")
+        tmgdci_eposta=QLineEdit()
+        for i in getir("danışman"):
+            tmgdci_belgeNo.setText(str(i[1]))
+            tmgdci_adisoyadi.setText(i[2])
+            tmgdci_kimlikno.setText(i[3])
+            tmgdci_cepno.setText(i[4])
+            tmgdci_eposta.setText(i[5])
 
         tmgd_kutu.addWidget(tmgdci_belgeNo_E)
         tmgd_kutu.addWidget(tmgdci_adisoyadi_E)

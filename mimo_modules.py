@@ -94,16 +94,30 @@ def ekle(tablo,*args):
     baglan.close()
 
 
-def getir(*args):
+def getir(g,*args):
     baglan=sqlite3.connect(db_dosyam)
     imlec=baglan.cursor()
-    if args:
-        imlec.execute(f"select * from firmalar where isletme_adi='{args[0]}'")
-        x=imlec.fetchone()
-    else:
-        imlec.execute("select * from firmalar")
-        x=imlec.fetchall()
-    
+    if g=="firmalar":
+        if args:
+            imlec.execute(f"select * from firmalar where isletme_adi='{args[0]}'")
+            x=imlec.fetchall()
+        else:
+            imlec.execute("select * from firmalar")
+            x=imlec.fetchall()
+    if g=="danışman":
+        if args:
+            imlec.execute(f"select * from danisman where d_adi_soyadi='{args[0]}'")
+            x=imlec.fetchone()
+        else:
+            imlec.execute("select * from danisman")
+            x=imlec.fetchall()
+    if g=="şirket":
+        if args:
+            imlec.execute(f"select * from sirket where tmgd_adi='{args[0]}'")
+            x=imlec.fetchall()
+        else:
+            imlec.execute("select * from sirket")
+            x=imlec.fetchall()
     return x
 
 def guncelle(*args):
